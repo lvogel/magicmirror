@@ -4,16 +4,18 @@
 // (c) 2016 by Lukas Vogel
 //
 
-var plugin_list = ['widget-controller'];
-
 document.addEventListener('DOMContentLoaded', function() {
-    var head_frag = document.createDocumentFragment();
-    var node;
+    // Load Widget Controller
+    var script = document.createElement('script');
+    script.src = './js/widget-controller.js';
     
-    for (var i = 0; i < plugin_list.length; i++) {
-        node = document.createElement('script');
-        node.src = './js/' + plugin_list[i] + '.js';
-        head_frag.appendChild(node);
+    script.onload = function() {
+        var Controller = new WidgetController();
+        Controller.init([{
+            name: 'blabla',
+            uses_css: false
+        }]);
     }
-    document.querySelector('head').appendChild(head_frag);
+    document.querySelector('head').appendChild(script);
+
 });
