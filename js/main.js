@@ -12,10 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // since the script is loaded asynchronously we have to wait for it
     script.onload = function() {
         var Controller = new WidgetController();
-        Controller.init([{
-            name: 'blabla',
-            uses_css: false
-        }]);
+        Controller.init();
     }
     document.querySelector('head').appendChild(script);
 

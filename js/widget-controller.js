@@ -31,6 +31,15 @@ function WidgetController() {
     this.init = function(list) {
         //TODO: Name verification
         _initialized = true;
+        var req = new XMLHttpRequest();
+        req.onreadystatechange = function() {
+            if (req.readyState == 4 && req.status == 200) {
+                console.log(req.responseText);
+            }
+        }
+        
+        req.open("GET", 'plugins.json', true);
+        req.send();
         
         if (list) {
             // Usage of document fragments improves performance of the DOM
