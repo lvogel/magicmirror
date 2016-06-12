@@ -25,48 +25,49 @@ function WidgetController() {
     /**
      * Initializes the controller. By doing so, it also adds all the widgets to the screen and refreshes them.
      * @param {Object[]} list - A list of plugins that should be included from the beginning.
-     * @param {string} list[].name - The name of the respective plugin. Its source file must be stored in /js/[name].js.
-     * @param {boolean} list[].uses_css - If your plugin needs its own css styles, set this to true. Its styles file must be stored in /css/[name].css.
      */
-    this.init = function(list) {
+    this.init = function() {
         //TODO: Name verification
-        _initialized = true;
         var req = new XMLHttpRequest();
         req.onreadystatechange = function() {
             if (req.readyState == 4 && req.status == 200) {
-                console.log(req.responseText);
-            }
-        }
-        
-        req.open("GET", 'plugins.json', true);
-        req.send();
-        
-        if (list) {
-            // Usage of document fragments improves performance of the DOM
-            var frag = document.createDocumentFragment();
-            var node_js;
-            var node_css;
-            
-            for (var i = 0; i < list.length; i++) {
-                if (!(list[i].name))
-                    continue;
+                // data fully and successfully loaded
+                var data = req.responseText;
+                data = JSON.parse(data);
                 
-                plugin_list.push(list[i]);
-                var node_js = document.createElement('script');
-                node_js.src = './js/' + list[i].name + '.js';
-        
-                if (list[i].uses_css) {
-                    var node_css = document.createElement('link');
-                    node_css.rel = 'stylesheet';
-                    node_css.href = './css/' + list[i].name + '.css';
-            
-                    frag.appendChild(node_css);
+                if (data && data instanceof Array) {
+                    _initialized = true;
+                    // Usage of document fragments improves performance of the DOM
+                    var frag = document.createDocumentFragment();
+                    var node_js;
+                    var node_css;
+                    
+                    for (var i = 0; i < data.length; i++) {
+                        if (!(data[i].name))
+                            continue;
+                        
+                        plugin_list.push(data[i]);
+                        var node_js = document.createElement('script');
+                        node_js.src = './js/' + data[i].name + '.js';
+                
+                        if (data[i].uses_css) {
+                            var node_css = document.createElement('link');
+                            node_css.rel = 'stylesheet';
+                            node_css.href = './css/' + data[i].name + '.css';
+                    
+                            frag.appendChild(node_css);
+                        }
+                        frag.appendChild(node_js);
+                    }
+                    document.querySelector('head').appendChild(frag);
                 }
-                frag.appendChild(node_js);
+                
+                _initialized = true;
             }
-            
-            document.querySelector('head').appendChild(frag);
         }
+        
+        req.open('GET', 'plugins.json', true);
+        req.send();
     }
     
     /**
