@@ -29,7 +29,7 @@ function WidgetController() {
     this.init = function() {
         //TODO: Name verification
         var req = new XMLHttpRequest();
-        req.onreadystatechange = function() {
+        req.onreadystatechange = function () {
             if (req.readyState == 4 && req.status == 200) {
                 // data fully and successfully loaded
                 var data = req.responseText;
@@ -45,13 +45,12 @@ function WidgetController() {
                     for (var i = 0; i < data.length; i++) {
                         if (!(data[i].name))
                             continue;
-                        
-                        plugin_list.push(data[i]);
-                        var node_js = document.createElement('script');
+
+                        node_js = document.createElement('script');
                         node_js.src = './js/' + data[i].name + '.js';
                 
                         if (data[i].uses_css) {
-                            var node_css = document.createElement('link');
+                            node_css = document.createElement('link');
                             node_css.rel = 'stylesheet';
                             node_css.href = './css/' + data[i].name + '.css';
                     
@@ -64,11 +63,29 @@ function WidgetController() {
                 
                 _initialized = true;
             }
-        }
+        };
+        
+        this.registerWidget = function (name, html) {
+            document.body.innerHTML += html;
+
+            return (plugin_list.push({
+                name: name
+            })) - 1;
+        };
+
+        this.setCallback = function (func, id) {
+            plugin_list[id].callback = func;
+        };
+
+        this.setRefreshRate = function (interval, id) {
+            p = plugin_list[id];
+            p.refreshRate = interval * 1000;
+            p.timer = window.setInterval(p.callback, p.refreshRate);
+        };
         
         req.open('GET', 'plugins.json', true);
         req.send();
-    }
+    };
     
     /**
      * Adds a single widget to the Widget Controller's list. The Widget Controller will now watch the widget and manage it.
@@ -93,5 +110,5 @@ function WidgetController() {
         
         frag.appendChild(node_js);
         document.querySelector('head').appendChild(frag);
-    }
+    };
 }

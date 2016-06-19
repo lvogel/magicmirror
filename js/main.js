@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // since the script is loaded asynchronously we have to wait for it
     script.onload = function() {
-        var Controller = new WidgetController();
+        var Controller = window.Controller = new WidgetController();
         Controller.init();
     }
     document.querySelector('head').appendChild(script);
