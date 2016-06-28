@@ -76,9 +76,12 @@ function WidgetController() {
             if(!addedSuccessfully)
                 return false;
 
-            widget.id = window.setTimeout(function () {
-                widget.draw(document.querySelectorAll('body > div')[widget.position]);
+            var node = document.querySelectorAll('body > div')[widget.position];
+            node.classList.add(widget.name);
+            widget.id = window.setInterval(function () {
+                widget.draw(node);
             }, widget.refreshRate);
+            widget.draw(node);
             return this;
         };
         
@@ -92,28 +95,15 @@ function WidgetController() {
         link.rel = 'stylesheet';
         link.scoped = 'scoped'; // maybe this will get implemented sooner or later
 
-        divs = document.querySelectorAll('body > div');
-        divs[widgetId].appendChild(link);
-    };
-    
-    /**
-     * Adds a single widget to the Widget Controller's list. The Widget Controller will now watch the widget and manage it.
-     * @param {string} name - The name of the plugin. Its source file mut be stored in /js/[name].js.
-     * @param {boolean} uses_css - If your plugin needs its own css styles, set this to true. Its styles file must be stored in /css/[name].css.
-     */
-    this.add = function (name, uses_css) {
-        //TODO: Implement verification of [name]
-        plugin_list.push(name);
-        var frag = document.createDocumentFragment();
-
-        var node_js = document.createElement('script');
-        node_js.scr = './js/' + name + '.js';
-        
-        frag.appendChild(node_js);
-        document.querySelector('head').appendChild(frag);
+        document.querySelector('head').appendChild(link);
     };
 }
 
+/**
+ * An instance of a Widget object that is limited to its own part of the screen
+ * and gets refreshed as often as specified.
+ * @constructor
+ */
 function Widget(name, callBack, desiredPositions, refreshRate) {
     this.name = name;
     this.draw = callBack;
