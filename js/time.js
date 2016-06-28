@@ -4,11 +4,6 @@
 // (c) 2016 by Lukas Vogel
 //
 
-if (window.Controller) {
-    var id = Controller.registerWidget('time', '<div class="time"></div>');
-    Controller.setCallback(function(drawHeight, drawWidth) {
-        var time = new Date();
-        document.querySelector('.time').innerHTML = time.getHours() + ":" + time.getMinutes();
-    }, id);
-    Controller.setRefreshRate(1, id);
-}
+new Widget('time', function(node) {
+    node.innerHTML = new Date().getTime();
+}, [1, 2, 3], 10000).register();

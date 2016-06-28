@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     script.onload = function() {
         var Controller = window.Controller = new WidgetController();
         Controller.init();
-    }
+    };
     document.querySelector('head').appendChild(script);
 
 });
