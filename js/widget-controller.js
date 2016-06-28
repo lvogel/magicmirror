@@ -28,8 +28,17 @@ function WidgetController() {
      */
     this.init = function() {
         var docFrag = document.createDocumentFragment();
-        for (var i = 0; i < 12; i++) {
-            docFrag.appendChild(document.createElement('div'));
+        var div_row;
+        var div_cell;
+        for (var i = 0; i < 4; i++) {
+            div_row = document.createElement('div');
+            div_row.classList.add('row');
+            for (var j = 0; j < 3; j++) {
+                div_cell = document.createElement('div');
+                div_cell.classList.add('cell');
+                div_row.appendChild(div_cell);
+            }
+            docFrag.appendChild(div_row);
         }
 
         document.body.appendChild(docFrag);
@@ -65,18 +74,21 @@ function WidgetController() {
         
         this.registerWidget = function (widget) {
             var addedSuccessfully = false;
-            for (var i = 0; i < widget.desiredPositions.length; i++) {
-                if (!plugin_list[i]) {
-                    plugin_list[i] = widget;
-                    widget.position = i;
+            var desPos = widget.desiredPositions;
+            for (var i = 0; i < desPos.length; i++) {
+                if (!plugin_list[desPos[i]]) {
+                    plugin_list[desPos[i]] = widget;
+                    widget.position = desPos[i];
                     addedSuccessfully = true;
+
+                    break;
                 }
             }
 
             if(!addedSuccessfully)
                 return false;
 
-            var node = document.querySelectorAll('body > div')[widget.position];
+            var node = document.querySelectorAll('body .row .cell')[widget.position];
             node.classList.add(widget.name);
             widget.id = window.setInterval(function () {
                 widget.draw(node);

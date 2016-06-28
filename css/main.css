@@ -3,7 +3,28 @@
  * Magic Mirror 
  * (c) 2016 by Lukas Vogel
  */
- 
+
+/* Because <body> is used as a table, <html> as the parent must be 100% high
+   or the table won't expand */
+html {
+    height: 100%;
+}
+
 body {
     font-family: Helvetica, Arial, sans-serif;
+    display: table;
+    table-layout: fixed;
+
+    width: 100%;
+    height: 100%;
+}
+
+body .row {
+    display: table-row;
+    height: 25%;
+    overflow: hidden;
+}
+
+body .row .cell {
+    display: table-cell;
 }

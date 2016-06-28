@@ -12,4 +12,4 @@ new Widget('time', function(node) {
 
     node.innerHTML = "<div class='time-clock'>" + timeString + "</div>" +
         "<div class='time-date'>" + date.toLocaleDateString() + "</div>";
-}, [1,0,3], 10000).register().applyStyles();
+}, [1,0,2], 10000).register().applyStyles();
