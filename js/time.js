@@ -5,5 +5,11 @@
 //
 
 new Widget('time', function(node) {
-    node.innerHTML = new Date().getTime();
-}, [1, 2, 3], 10000).register();
+    var date = new Date();
+    var hr = (date.getHours() < 10) ? "0" + date.getHours() : date.getHours();
+    var min = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
+    var timeString = hr + ":" + min;
+
+    node.innerHTML = "<div class='time-clock'>" + timeString + "</div>" +
+        "<div class='time-date'>" + date.toLocaleDateString() + "</div>";
+}, [1,0,3], 10000).register().applyStyles();
