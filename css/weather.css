@@ -1,0 +1,9 @@
+/*
+ * weather.css
+ * Magic Mirror
+ * (c) 2016 by Lukas Vogel
+ */
+
+.weather .temp {
+    font-size: 30px;
+}
