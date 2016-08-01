@@ -50,8 +50,8 @@ function weather_fetchData(node) {
 }
 
 function weather_updateDOM(node) {
-    $('.weather .weather-temp').innerHTML = Math.round(weather_lastFetchedData.main.temp) + '°C';
-    $('.weather .weather-cond').innerHTML = weather_lastFetchedData.weather[0].description;
+    $('.weather .number').innerHTML = Math.round(weather_lastFetchedData.main.temp);
+    $('.weather .cond').innerHTML = weather_lastFetchedData.weather[0].description.toLowerCase();
 }
 
 new Widget('weather', weather_fetchData, [9, 10, 11], 60000).register().loadDependencies({

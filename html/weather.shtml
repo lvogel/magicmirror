@@ -1,2 +1,5 @@
-<div class="weather-temp"> </div>
-<div class="weather-cond"> </div>
+<div class="temp">
+    <span class="number"></span>
+    <span class="unit">°C</span>
+</div>
+<div class="cond"> </div>
