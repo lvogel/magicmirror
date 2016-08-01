@@ -10,6 +10,9 @@ new Widget('time', function(node) {
     var min = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes();
     var timeString = hr + ":" + min;
 
-    node.innerHTML = "<div class='time-clock'>" + timeString + "</div>" +
-        "<div class='time-date'>" + date.toLocaleDateString() + "</div>";
-}, [1,0,2], 10000).register().applyStyles();
+    $('.time-clock').innerHTML = timeString;
+    $('.time-date').innerHTML = date.toLocaleDateString();
+}, [1,0,2], 10000).register().loadDependencies({
+    html: 'time.shtml',
+    css: 'time.css'
+});

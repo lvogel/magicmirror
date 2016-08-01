@@ -1,8 +1,4 @@
 [
-    {
-        "name": "time"
-    },
-    {
-        "name": "weather"
-    }
+    "time",
+    "weather"
 ]

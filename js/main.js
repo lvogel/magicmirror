@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var Controller = window.Controller = new WidgetController();
         Controller.init();
     };
-    document.querySelector('head').appendChild(script);
+    $('head').appendChild(script);
 
 });
 

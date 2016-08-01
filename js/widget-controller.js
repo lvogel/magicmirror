@@ -41,7 +41,7 @@ function WidgetController() {
             docFrag.appendChild(div_row);
         }
 
-        document.body.appendChild(docFrag);
+        $('body').appendChild(docFrag);
 
         //TODO: Name verification
         var req = new XMLHttpRequest();
@@ -57,21 +57,24 @@ function WidgetController() {
                     var node_js;
                     
                     for (var i = 0; i < data.length; i++) {
-                        if (!(data[i].name))
-                            continue;
+                        if (typeof data[i] != "string")
+                            continue; // we can't read a file name from a number
 
                         node_js = document.createElement('script');
-                        node_js.src = './js/' + data[i].name + '.js';
+                        node_js.src = './js/' + data[i] + '.js';
                 
                         frag.appendChild(node_js);
                     }
-                    document.querySelector('head').appendChild(frag);
+                    $('head').appendChild(frag);
                 }
                 
                 _initialized = true;
             }
         };
         
+        req.open('GET', 'plugins.json', true);
+        req.send(); 
+
         this.registerWidget = function (widget) {
             var addedSuccessfully = false;
             var desPos = widget.desiredPositions;
@@ -88,26 +91,40 @@ function WidgetController() {
             if(!addedSuccessfully)
                 return false;
 
-            var node = document.querySelectorAll('body .row .cell')[widget.position];
+            var node = $('body .row .cell')[widget.position];
             node.classList.add(widget.name);
+
             widget.id = window.setInterval(function () {
                 widget.draw(node);
             }, widget.refreshRate);
-            widget.draw(node);
-            return this;
+            return this;    // for chaining
         };
-        
-        req.open('GET', 'plugins.json', true);
-        req.send();
     };
 
-    this.applyStyleToWidget = function (widgetId) {
-        var link = document.createElement('link');
-        link.href = './css/' + plugin_list[widgetId].name + '.css';
-        link.rel = 'stylesheet';
-        link.scoped = 'scoped'; // maybe this will get implemented sooner or later
+    this.loadDependencies = function (widgetId, dependencies) {
+        if (dependencies.html && typeof dependencies.html == "string" &&
+            dependencies.html.indexOf('..') == -1) {
+            // dependencies.html is a valid string and does not access
+            // a parent directory
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function() {
+                if (req.readyState == 4 && req.status == 200) {
+                    $('body .row .cell')[widgetId].innerHTML = req.responseText;
+                }
+            };
+            req.open('GET', './html/' + dependencies.html, false);
+            req.send();
+        }
 
-        document.querySelector('head').appendChild(link);
+        if (dependencies.css && typeof dependencies.css == "string" &&
+            dependencies.css.indexOf('..') == -1) {
+            var link = document.createElement('link');
+            link.href = './css/' + plugin_list[widgetId].name + '.css';
+            link.rel = 'stylesheet';
+            link.scoped = 'scoped'; // maybe this will get implemented sooner or later
+
+            $('head').appendChild(link);
+        }
     };
 }
 
@@ -131,17 +148,18 @@ function Widget(name, callBack, desiredPositions, refreshRate) {
         }
 
         window.Controller.registerWidget(this);
-        return this;
+        return this;    // for chaining
     };
 
-    this.applyStyles = function() {
+    this.loadDependencies = function(dependencies) {
         if (!window.Controller) {
             if (console.error)
                 console.error("Widget Controller not set up");
             return false;
         }
 
-        window.Controller.applyStyleToWidget(this.position);
+        window.Controller.loadDependencies(this.position, dependencies);
+        this.draw();
     };
 }
 
