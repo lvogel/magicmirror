@@ -89,31 +89,31 @@ function WidgetController() {
         
         req.open('GET', 'plugins.json', true);
         req.send(); 
+    };
 
-        this.registerWidget = function (widget) {
-            var addedSuccessfully = false;
-            var desPos = widget.desiredPositions;
-            for (var i = 0; i < desPos.length; i++) {
-                if (!plugin_list[desPos[i]]) {
-                    plugin_list[desPos[i]] = widget;
-                    widget.position = desPos[i];
-                    addedSuccessfully = true;
+    this.registerWidget = function (widget) {
+        var addedSuccessfully = false;
+        var desPos = widget.desiredPositions;
+        for (var i = 0; i < desPos.length; i++) {
+            if (!plugin_list[desPos[i]]) {
+                plugin_list[desPos[i]] = widget;
+                widget.position = desPos[i];
+                addedSuccessfully = true;
 
-                    break;
-                }
+                break;
             }
+        }
 
-            if(!addedSuccessfully)
-                return false;
+        if(!addedSuccessfully)
+            return false;
 
-            var node = $('body .row .cell')[widget.position];
-            node.classList.add(widget.name);
+        var node = $('body .row .cell')[widget.position];
+        node.classList.add(widget.name);
 
-            widget.id = window.setInterval(function () {
-                widget.draw(node);
-            }, widget.refreshRate);
-            return this;    // for chaining
-        };
+        widget.id = window.setInterval(function () {
+            widget.draw(node);
+        }, widget.refreshRate);
+        return this;    // for chaining
     };
 
     this.loadDependencies = function (widgetId, dependencies) {
