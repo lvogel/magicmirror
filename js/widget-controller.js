@@ -46,29 +46,44 @@ function WidgetController() {
         //TODO: Name verification
         var req = new XMLHttpRequest();
         req.onreadystatechange = function () {
-            if (req.readyState == 4 && req.status == 200) {
-                // data fully and successfully loaded
-                var data = req.responseText;
-                data = JSON.parse(data);
-                
-                if (data && data instanceof Array) {
-                    // Usage of document fragments improves performance of the DOM
-                    var frag = document.createDocumentFragment();
-                    var node_js;
-                    
-                    for (var i = 0; i < data.length; i++) {
-                        if (typeof data[i] != "string")
-                            continue; // we can't read a file name from a number
+            if (req.readyState == 4) {
+                if (req.status == 200) {
+                    // data fully and successfully loaded
+                    var data = req.responseText;
 
-                        node_js = document.createElement('script');
-                        node_js.src = './js/' + data[i] + '.js';
-                
-                        frag.appendChild(node_js);
+                    try {
+                        data = JSON.parse(data);
                     }
-                    $('head').appendChild(frag);
+                    catch(e) {
+                        console.error(e);
+                    }
+                    
+                    // If the JSON parsing failed it doesn't matter because the
+                    // following steps will just be skipped.
+                    if (data && data instanceof Array) {
+                        // Usage of document fragments improves performance of the DOM
+                        var frag = document.createDocumentFragment();
+                        var node_js;
+                        
+                        for (var i = 0; i < data.length; i++) {
+                            if (typeof data[i] != "string")
+                                continue; // we can't read a file name from a number
+
+                            node_js = document.createElement('script');
+                            node_js.src = './js/' + data[i] + '.js';
+                    
+                            frag.appendChild(node_js);
+                        }
+                        $('head').appendChild(frag);
+                    }
+                } else {
+                    console.error('Could not complete HTTP Request: ' + req.status);
                 }
-                
-                _initialized = true;
+
+            // It doesn't matter whether the XMLRequest succeeded or not,
+            // since the Controller won't try again to load the data
+            // the initialization has finished.
+            _initialized = true;
             }
         };
         
@@ -108,8 +123,12 @@ function WidgetController() {
             // a parent directory
             var req = new XMLHttpRequest();
             req.onreadystatechange = function() {
-                if (req.readyState == 4 && req.status == 200) {
-                    $('body .row .cell')[widgetId].innerHTML = req.responseText;
+                if (req.readyState == 4) {
+                    if (req.status == 200) {
+                        $('body .row .cell')[widgetId].innerHTML = req.responseText;
+                    } else {
+                        console.error('Could not complete HTTP Request: ' + req.status);
+                    }
                 }
             };
             req.open('GET', './html/' + dependencies.html, false);
