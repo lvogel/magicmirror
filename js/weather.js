@@ -43,9 +43,18 @@ function weather_fetchData(node) {
         }
     };
 
+    var url;
+    if (window.weather_location) {
+        url = 'http://api.openweathermap.org/data/2.5/weather?lat = ' +
+            weather_location.latitude + '&lon=' + weather_location.longitude +
+            '&appid=' + api_key + '&units=metric&lang=de';
+    } else {
+        url = 'http://api.openweathermap.org/data/2.5/weather?id=' + 
+            city_id + '&appid=' + api_key + '&units=metric&lang=de';
+    }
+    
     // My API key is 424a922dab68fc46fbd86e31ae94846d
-    req.open('GET', 'http://api.openweathermap.org/data/2.5/weather?id=' + 
-        city_id + '&appid=' + api_key + '&units=metric&lang=de', true);
+    req.open('GET', url, true);
     req.send();
 }
 
@@ -55,6 +64,7 @@ function weather_updateDOM(node) {
 }
 
 new Widget('weather', weather_fetchData, [9, 10, 11], 60000).register().loadDependencies({
+    helper: 'weather-helper.js',
     html: 'weather.shtml',
     css: 'weather.css'
 });
