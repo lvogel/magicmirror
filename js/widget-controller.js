@@ -21,6 +21,12 @@ function WidgetController() {
      * @private
      */
     var plugin_list = [];
+
+    /**
+     * Stores the helpers that the controller manages.
+     * @private
+     */
+    var helper_list = [];
     
     /**
      * Initializes the controller. By doing so, it also adds all the widgets to the screen and refreshes them.
@@ -116,7 +122,26 @@ function WidgetController() {
         return this;    // for chaining
     };
 
+    this.registerHelper = function (helper) {
+
+        helper.id = window.setInterval(function() {
+            helper.run();
+        }, helper.refreshRate);
+
+        helper.run();
+
+        return this;
+    };
+
     this.loadDependencies = function (widgetId, dependencies) {
+        if (dependencies.helper && typeof dependencies.helper == "string" &&
+            dependencies.helper.indexOf('..') == -1) {
+            var script = document.createElement('script');
+            script.src = './js/' + dependencies.helper;
+
+            $('head').appendChild(script);
+        }
+
         if (dependencies.html && typeof dependencies.html == "string" &&
             dependencies.html.indexOf('..') == -1) {
             // dependencies.html is a valid string and does not access
@@ -182,3 +207,24 @@ function Widget(name, callBack, desiredPositions, refreshRate) {
     };
 }
 
+/**
+ * An instance of a Helper object that – unlike a widget – doesn't appear
+ * onscreen, but also runs periodically.
+ * @constructor
+ */
+function Helper(associatedWidget, callBack, refreshRate) {
+    this.associatedWidget = associatedWidget;
+    this.run = callBack;
+    this.refreshRate = refreshRate;
+
+    this.register = function() {
+        if (!window.Controller) {
+            if (console.error)
+                console.error("Widget Controller not set up");
+            return false;
+        }
+
+        window.Controller.registerHelper(this);
+        return this;    // for chaining
+    };
+}
