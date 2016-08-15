@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var Controller = window.Controller = new WidgetController();
         Controller.init();
     };
+    
     $('head').appendChild(script);
-
 });
 
 /**
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
  * native EcmaScript. It provides a way of using jQuery's most popular feature,
  * DOM node lookup, without actually requiring jQuery.
  * @param {String[]} selector – The CSS like lookup selector.
+ * ℗returns {Node|NodeList} A NodeList or a the single node that was found.
  */
 function $(selector) {
     var result = document.querySelectorAll(selector);

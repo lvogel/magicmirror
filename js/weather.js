@@ -43,7 +43,10 @@ function weather_fetchData(node) {
         }
     };
 
+    // If the helper supplied specific location data. Instead, fall back
+    // to Winterthur (default)
     var url;
+    
     if (window.weather_location) {
         url = 'http://api.openweathermap.org/data/2.5/weather?lat = ' +
             weather_location.latitude + '&lon=' + weather_location.longitude +
@@ -52,8 +55,7 @@ function weather_fetchData(node) {
         url = 'http://api.openweathermap.org/data/2.5/weather?id=' + 
             city_id + '&appid=' + api_key + '&units=metric&lang=de';
     }
-    
-    // My API key is 424a922dab68fc46fbd86e31ae94846d
+
     req.open('GET', url, true);
     req.send();
 }
