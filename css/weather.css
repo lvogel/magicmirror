@@ -11,8 +11,8 @@
 
 .weather .temp {
     position: absolute;
-    bottom: 5%;
-    left: 5%;
+    bottom: 20px;
+    left: 20px;
 
     text-align: right;
     width: 200px;
@@ -30,10 +30,21 @@
     font-size: 40px;
 }
 
+.weather .location {
+    font-size: 25px;
+    text-align: right;
+    text-overflow: ellipsis;
+
+    position: absolute;
+    bottom: 120px;
+    left: 20px;
+    width: 200px;
+}
+
 .weather .cond {
     position: absolute;
     left: 250px;
-    bottom: 5%;
+    bottom: 20px;
     width: 200px;
 
     font-size: 35px;

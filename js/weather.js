@@ -63,6 +63,7 @@ function weather_fetchData(node) {
 function weather_updateDOM(node) {
     $('.weather .number').innerHTML = Math.round(weather_lastFetchedData.main.temp);
     $('.weather .cond').innerHTML = weather_lastFetchedData.weather[0].description.toLowerCase();
+    $('.weather .location').innerHTML = weather_lastFetchedData.name || "";
 }
 
 new Widget('weather', weather_fetchData, [9, 10, 11], 60000).register().loadDependencies({
