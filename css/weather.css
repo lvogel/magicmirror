@@ -7,16 +7,12 @@
 .weather {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
-
-    position: absolute;
-    bottom: 5%;
-    left: 5%;
 }
 
 .weather .temp {
     position: absolute;
-    bottom: 0;
-    left: 0;
+    bottom: 5%;
+    left: 5%;
 
     text-align: right;
     width: 200px;
@@ -35,9 +31,9 @@
 }
 
 .weather .cond {
-    position: relative;
+    position: absolute;
     left: 250px;
-    bottom: 0;
+    bottom: 5%;
     width: 200px;
 
     font-size: 35px;
