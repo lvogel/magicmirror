@@ -119,6 +119,8 @@ function WidgetController() {
         widget.id = window.setInterval(function () {
             widget.draw(node);
         }, widget.refreshRate);
+
+        widget.draw();
         return this;    // for chaining
     };
 

@@ -7,7 +7,7 @@
 // Bad practise ahead
 var weather_lastFetchedData;
 
-function weather_fetchData(node) {
+function weather_fetchData() {
     var api_key = '424a922dab68fc46fbd86e31ae94846d'; // for easy future change
     var city_id = '2657970'; // Winterthur. Change later, maybe?
     var req = new XMLHttpRequest();
@@ -36,7 +36,7 @@ function weather_fetchData(node) {
                     return;
                 else weather_lastFetchedData = data;
 
-                weather_updateDOM(node);
+                weather_updateDOM();
             } else {
                 console.error('Could not complete HTTP Request: ' + req.status);
             }
@@ -60,7 +60,7 @@ function weather_fetchData(node) {
     req.send();
 }
 
-function weather_updateDOM(node) {
+function weather_updateDOM() {
     $('.weather .number').innerHTML = Math.round(weather_lastFetchedData.main.temp);
     $('.weather .cond').innerHTML = weather_lastFetchedData.weather[0].description.toLowerCase();
     $('.weather .location').innerHTML = weather_lastFetchedData.name || "";
