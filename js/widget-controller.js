@@ -120,7 +120,6 @@ function WidgetController() {
             widget.draw(node);
         }, widget.refreshRate);
 
-        widget.draw();
         return this;    // for chaining
     };
 
