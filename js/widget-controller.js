@@ -100,21 +100,61 @@ function WidgetController() {
     this.registerWidget = function (widget) {
         var addedSuccessfully = false;
         var desPos = widget.desiredPositions;
-        for (var i = 0; i < desPos.length; i++) {
-            if (!plugin_list[desPos[i]]) {
-                plugin_list[desPos[i]] = widget;
+
+        if (!(desPos instanceof Array))
+            return false;
+
+        // Validate desPos
+        if (desPos.every(function (el) {
+            return !isNaN(el);          // every element of desPos is a number
+        })) {
+            for (var i = 0; i < desPos.length; i++) {
+                if (!plugin_list[desPos[i]]) {
+                    plugin_list[desPos[i]] = widget;
+                    widget.position = desPos[i];
+                    addedSuccessfully = true;
+    
+                    break;
+                }
+            }
+        } else if (desPos.every(function (el) {
+            // every element of desPos is an array that contains at least two
+            // other position values
+            return el instanceof Array && el.length >= 2; 
+        })) {
+            outer: for (var i = 0; i < desPos.length; i++) {
+                for (var j = 0; j < desPos[i].length; j++) {
+                    if (plugin_list[desPos[i][j]]) {
+                        continue outer;
+                    }
+                }
+
+                // We found a match!)
+                for (var k = 0; k < desPos[i].length; k++) {
+                    plugin_list[desPos[k]] = widget;
+                }
+
                 widget.position = desPos[i];
                 addedSuccessfully = true;
-
-                break;
             }
         }
 
         if(!addedSuccessfully)
             return false;
 
-        var node = $('body .row .cell')[widget.position];
-        node.classList.add(widget.name);
+        var node;
+        if (widget.position instanceof Array) {
+            nodes = Array.prototype.filter.call($('body .row .cell'),
+                function (el, index) {
+                    return widget.position.includes(index);
+            });
+            Array.prototype.forEach.call(nodes, function(node) {
+                node.classList.add(widget.name);
+            });
+        } else {
+            node = $('body .row .cell')[widget.position];
+            node.classList.add(widget.name);
+        }
 
         widget.id = window.setInterval(function () {
             widget.draw(node);
