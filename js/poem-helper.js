@@ -30,7 +30,7 @@ function poem_fetchPoemOfTheDay() {
                 // the poem of the day is always stored in this paragraph
                 poem_potd = $('p.stext', doc).innerHTML;
             } else {
-                console.error('Could not complete HTTP Request: ' + code);
+                console.error('Could not complete HTTP Request: ' + req.status);
             }
         }
     };

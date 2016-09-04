@@ -13,10 +13,6 @@
  * @see Widget
  * @see Helper
  */
-/**
- * A callback that will be invoked when the helper should run.
- * @callback HelperCallback
- */
 
 /**
  * The controller that is in charge of widget positions, their functionality
@@ -201,19 +197,17 @@ function WidgetController() {
      * @returns {Object} The Controller object to enable chaining.
      */
     this.registerHelper = function (helper) {
-
         helper.id = window.setInterval(function() {
             helper.run();
         }, helper.refreshRate);
 
         helper.run();
-
         return this;
     };
 
     this.loadDependencies = function (widgetId, dependencies) {
         if (dependencies.helper && typeof dependencies.helper == "string" &&
-            dependencies.helper.indexOf('..') == -1) {
+            dependencies.helper.indexOf('../') == -1) {
             var script = document.createElement('script');
             script.src = './js/' + dependencies.helper;
 
@@ -221,7 +215,7 @@ function WidgetController() {
         }
 
         if (dependencies.html && typeof dependencies.html == "string" &&
-            dependencies.html.indexOf('..') == -1) {
+            dependencies.html.indexOf('../') == -1) {
             // dependencies.html is a valid string and does not access
             // a parent directory
             var req = new XMLHttpRequest();
@@ -239,7 +233,7 @@ function WidgetController() {
         }
 
         if (dependencies.css && typeof dependencies.css == "string" &&
-            dependencies.css.indexOf('..') == -1) {
+            dependencies.css.indexOf('../') == -1) {
             var link = document.createElement('link');
             link.href = './css/' + plugin_list[widgetId].name + '.css';
             link.rel = 'stylesheet';
@@ -254,18 +248,72 @@ function WidgetController() {
  * An instance of a Widget object that is limited to its own part of the screen
  * and gets refreshed as often as specified.
  * @constructor
+ * @param {String} name - The name of the widget that must be unique. Otherwise,
+ * registering with the Controller will fail.
+ * @param {WidgetCallback} callBack - The callback that will be invoked as soon
+ * as the widget should be refreshed.
+ * @param {Number|Number[]} desiredPositions - The single or multiple positions
+ * in a virtual 3x4 grid that the widget wishes to occupy. Positions are numbered
+ * from top left (0) to bottom right (11)
+ * @param {Number} refreshRate - The amount of milliseconds that passes between
+ * two consecutive refreshes of the widget.
+ * @throws {TypeError} If any of the required arguments are not given or invalid.
  */
 function Widget(name, callBack, desiredPositions, refreshRate) {
+    /**
+     * A callback that will be run whenever the widget should be refreshed,
+     * usually after the timer has fired.
+     * @callback WidgetCallback
+     * @param {Node|NodeList} nodes - The single or multiple DOM node(s) that
+     * are assigned to the widget.
+     */
+
+    if (typeof name !== 'string' ||
+        typeof callBack !== 'function' ||
+        (typeof desiredPositions !== 'number' &&
+        !(desiredPositions instanceof Array)) ||
+        typeof refreshRate !== 'number') {
+        throw new TypeError('Invalid constructor argument(s)');
+    }
+
+    /**
+     * The name that the widget receives. It is shared with its helpers.
+     * @type {String}
+     */
     this.name = name;
+    /**
+     * The callback that is responsible for drawing the widget.
+     * @type {WidgetCallback}
+     */
     this.draw = callBack;
+    /**
+     * The desired position(s) that the widget would like to occupy in the grid.
+     * @see {Widget}
+     */
     this.desiredPositions = desiredPositions;
+    /**
+     * The delay (in milliseconds) between two consecutive draw calls.
+     * @type {Number}
+     */
     this.refreshRate = refreshRate;
+    /**
+     * The position that the widget will be assigned to depending on its
+     * preferences during the registration process. Should only be set by the
+     * {@linkcode WidgetController}.
+     * @type {Number}
+     */
     this.position = null;
 
+    /**
+     * Start the registration process with the Controller. The benefit over doing
+     * it manually is that it automatically checks for errors with the Controller.
+     * @returns {Boolean|Object} Returns false, if an error occured. Returns the
+     * widget itself to enable chaining.
+     */
     this.register = function() {
         if (!window.Controller) {
             if (console.error)
-                console.error("Widget Controller not set up");
+                console.error('Widget Controller not set up');
             return false;
         }
 
@@ -273,10 +321,20 @@ function Widget(name, callBack, desiredPositions, refreshRate) {
         return this;    // for chaining
     };
 
+    /**
+     * Ask the WidgetController to load all of the widget's dependencies. These
+     * can include: CSS and SHTML files and JavaScript helpers. After the
+     * dependencies have been loaded, the widget is asked to re-draw its contents.
+     * @param {Object.<string,string>} dependencies - The dependencies that the
+     * widget requires. Widgets can require up to one file per category. The
+     * files must be positioned in the correct directories for this to work.
+     * Paths to other folders will be ignored.
+     * @returns {Boolean} Returns false, if something failed.
+     */
     this.loadDependencies = function(dependencies) {
         if (!window.Controller) {
             if (console.error)
-                console.error("Widget Controller not set up");
+                console.error('Widget Controller not set up');
             return false;
         }
 
@@ -291,20 +349,43 @@ function Widget(name, callBack, desiredPositions, refreshRate) {
  * contents. Instead, they should provide data to their respective widgets so
  * that they can display it properly.
  * @constructor
- * @param {string} associatedWidget - The name of the widget that the helper goes with.
+ * @param {String} associatedWidget - The name of the widget that the helper goes with.
  * @param {HelperCallback} callBack - The method that will be invoked on run.
- * @param {number} refreshRate - Delay in milliseconds between consecutive helper runs.
+ * @param {Number} refreshRate - Delay in milliseconds between consecutive helper runs.
+ * @throws {TypeError} If any of the required arguments are not given or invalid.
  */
 function Helper(associatedWidget, callBack, refreshRate) {
-    /** The widget that the helper goes with. Currently unused. */
+    /**
+     * A callback that will be invoked when the helper should run.
+     * @callback HelperCallback
+     */
+
+    // If any of the given parameters are invalid, abort.
+    if (typeof associatedWidget !== 'string' || 
+        typeof callBack !== 'function' ||
+        isNaN(refreshRate) ||
+        refreshRate <= 0) {
+        throw new TypeError('Invalid constructor argument(s)');
+    }
+
+    /**
+     * The widget that the helper goes with. Currently unused.
+     * @type {String}
+     */
     this.associatedWidget = associatedWidget;
-    /** The function that should be called when refreshing the helper. */
+    /** 
+     * The function that should be called when refreshing the helper.
+     * @type {HelperCallback}
+     */
     this.run = callBack;
-    /** Delay in milliseconds between to consecutive runs of the helper.  */
+    /**
+     * Delay in milliseconds between to consecutive runs of the helper.
+     * @type {Number}
+     */
     this.refreshRate = refreshRate;
 
     /**
-     * Start the registration process with the Controller. The benefit of doing
+     * Start the registration process with the Controller. The benefit over doing
      * it manually is that it automatically checks for errors with the Controller.
      * @returns {Boolean|Object} Returns false, if an error occured. Returns the
      * helper itself to enable chaining.
