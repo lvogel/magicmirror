@@ -5,6 +5,15 @@
 //
 
 /**
+ * @file Contains the three classes and their constructors that are at the heart
+ * of the Magic Mirror: The Widget Controller, Widget and Helper classes which
+ * are best explained on their own pages.
+ * @author Lukas Vogel
+ * @see WidgetController
+ * @see Widget
+ * @see Helper
+ */
+/**
  * A callback that will be invoked when the helper should run.
  * @callback HelperCallback
  */

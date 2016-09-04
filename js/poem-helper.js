@@ -11,13 +11,15 @@
 
 /**
  * Contains the last fetched Poem Of The Day from the server. Includes HTML
- * break tags instead of ECMAScript newlines.
+ * break tags instead of ECMAScript newlines. Should only be set by
+ * {@linkcode poem_fetchPoemOfTheDay}
  * @type {String}
  */
 var poem_potd = '';
 
 /**
- * Fetches the poem of the day from gedichte.xbib.de
+ * Fetches the poem of the day from gedichte.xbib.de and stores it in
+ * {@linkcode poem_potd}.
  */
 function poem_fetchPoemOfTheDay() {
     var req = new XMLHttpRequest();

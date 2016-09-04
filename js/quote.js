@@ -5,6 +5,13 @@
 //
 
 /**
+ * @file Contains the implementation of a quote widget that will fetch today's
+ * motivational quote from a website and then display it to motivate the user
+ * to conquer his day successfully.
+ * @author Lukas Vogel
+ */
+
+/**
  * Contains the last fetched data (in object form) from the REST API of the
  * quote server.
  * @type {Object}
