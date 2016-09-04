@@ -97,6 +97,15 @@ function WidgetController() {
         req.send(); 
     };
 
+    /**
+     * Register a widget with the controller so that the Controller object keeps track of refresh rates.
+     * The Controller will also position the widget on screen, depending on its preferences stored in
+     * {@linkcode Widget.desiredPositions}
+     * @param {Object} widget - The widget that should be managed.
+     * @returns {Boolean|Object} If something during the registration process fails, 
+     * false will be returned. Otherwise, the Controller returns itself to enable
+     * chaining.
+     */
     this.registerWidget = function (widget) {
         var addedSuccessfully = false;
         var desPos = widget.desiredPositions;
@@ -163,6 +172,12 @@ function WidgetController() {
         return this;    // for chaining
     };
 
+    /**
+     * Register a helper with the controller so that the Controller object keeps track of refresh rates.
+     * The Helper will <b>not</b> be positioned on screen.
+     * @param {Object} helper - The helper that should be managed.
+     * @returns {Object} The Controller object to enable chaining.
+     */
     this.registerHelper = function (helper) {
 
         helper.id = window.setInterval(function() {
@@ -250,14 +265,25 @@ function Widget(name, callBack, desiredPositions, refreshRate) {
 
 /**
  * An instance of a Helper object that – unlike a widget – doesn't appear
- * onscreen, but also runs periodically.
+ * onscreen, but also runs periodically. Helpers should <b>not</b> modify DOM
+ * contents. Instead, they should provide data to their respective widgets so
+ * that they can display it properly.
  * @constructor
  */
 function Helper(associatedWidget, callBack, refreshRate) {
+    /** The widget that the helper goes with. Currently unused. */
     this.associatedWidget = associatedWidget;
+    /** The function that should be called when refreshing the helper. */
     this.run = callBack;
+    /** Delay in milliseconds between to consecutive runs of the helper.  */
     this.refreshRate = refreshRate;
 
+    /**
+     * Start the registration process with the Controller. The benefit of doing
+     * it manually is that it automatically checks for errors with the Controller.
+     * @returns {Boolean|Object} Returns false, if an error occured. Returns the
+     * helper itself to enable chaining.
+     */
     this.register = function() {
         if (!window.Controller) {
             if (console.error)

@@ -5,8 +5,13 @@
 //
 
 /**
+ * @file Contains the implementation of a time widget.
+ * @author Lukas Vogel
+ */
+
+/**
  * Gets the current time from the browser and updates the DOM.
- * @param {Node} The DOM node that contains the widget's code.
+ * @param {Node} - The DOM node that contains the widget's code.
  */
 function time_update(node) {
     var date = new Date();
