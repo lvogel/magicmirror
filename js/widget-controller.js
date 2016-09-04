@@ -5,6 +5,11 @@
 //
 
 /**
+ * A callback that will be invoked when the helper should run.
+ * @callback HelperCallback
+ */
+
+/**
  * The controller that is in charge of widget positions, their functionality
  * and refresh rates.
  * @constructor
@@ -269,6 +274,9 @@ function Widget(name, callBack, desiredPositions, refreshRate) {
  * contents. Instead, they should provide data to their respective widgets so
  * that they can display it properly.
  * @constructor
+ * @param {string} associatedWidget - The name of the widget that the helper goes with.
+ * @param {HelperCallback} callBack - The method that will be invoked on run.
+ * @param {number} refreshRate - Delay in milliseconds between consecutive helper runs.
  */
 function Helper(associatedWidget, callBack, refreshRate) {
     /** The widget that the helper goes with. Currently unused. */
