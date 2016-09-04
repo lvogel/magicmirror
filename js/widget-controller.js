@@ -165,7 +165,7 @@ function WidgetController() {
         if(!addedSuccessfully)
             return false;
 
-        var node;
+        var nodes;
         if (widget.position instanceof Array) {
             nodes = Array.prototype.filter.call($('body .row .cell'),
                 function (el, index) {
@@ -175,14 +175,22 @@ function WidgetController() {
                 node.classList.add(widget.name);
             });
         } else {
-            node = $('body .row .cell')[widget.position];
-            node.classList.add(widget.name);
+            nodes = $('body .row .cell')[widget.position];
+            nodes.classList.add(widget.name);
         }
 
         widget.id = window.setInterval(function () {
-            widget.draw(node);
+            widget.draw(nodes);
         }, widget.refreshRate);
 
+        // Draw once, try even if the widget has not yet been fully loaded.
+        try {
+            widget.draw(nodes);
+        }
+        catch(e) {
+            // Do nothing, obviously. Yep.
+        }
+        
         return this;    // for chaining
     };
 

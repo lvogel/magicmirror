@@ -24,7 +24,7 @@ var quote_lastFetchedData;
  * @throws Will log an error to the console if the HTTP request could not be
  * completed.
  */
-function quote_fetchData() {
+function quote_fetchData(nodes) {
     var req = new XMLHttpRequest();
 
     req.onreadystatechange = function() {
@@ -46,7 +46,7 @@ function quote_fetchData() {
                 // TODO: sanity check JSON data
 
                 quote_lastFetchedData = data;
-                quote_updateDOM();
+                quote_updateDOM(nodes[0]);
             } else {
                 console.error('Could not complete HTTP Request: ', req.status);
             }
@@ -57,8 +57,8 @@ function quote_fetchData() {
     req.send();
 }
 
-function quote_updateDOM() {
-    $('.quote')[0].innerHTML = quote_lastFetchedData.contents.quotes[0].quote; 
+function quote_updateDOM(node) {
+    node.innerHTML = quote_lastFetchedData.contents.quotes[0].quote; 
 }
 
 new Widget('quote', quote_fetchData, [[0,3]], 3600000).register();
