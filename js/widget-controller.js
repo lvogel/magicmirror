@@ -120,7 +120,9 @@ function WidgetController() {
         var addedSuccessfully = false;
         var desPos = widget.desiredPositions;
 
-        if (!(desPos instanceof Array))
+        if (!(desPos instanceof Array) || !plugin_list.every(function(el) {
+            return el.name != widget.name;
+        }))
             return false;
 
         // Validate desPos
