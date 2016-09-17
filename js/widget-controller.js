@@ -319,7 +319,10 @@ function Widget(name, callBack, desiredPositions, refreshRate) {
             return false;
         }
 
-        window.Controller.registerWidget(this);
+        if (!window.Controller.registerWidget(this)) {
+            return false;
+        }
+        
         return this;    // for chaining
     };
 
