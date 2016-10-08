@@ -47,6 +47,12 @@ function quote_fetchData(nodes) {
 
                 quote_lastFetchedData = data;
                 quote_updateDOM(nodes[0]);
+
+            } else if (req.status == 429) {
+                // API quota exceeded. No more requests possible.
+                // happens if browser refreshes >10x/hour
+                console.warn('Could not load quote of the day: API limit exceeded');
+                return false;
             } else {
                 console.error('Could not complete HTTP Request: ', req.status);
             }
