@@ -16,6 +16,7 @@
  * @type {String}
  */
 var poem_potd = '';
+var poem_auth = '';
 
 /**
  * Fetches the poem of the day from gedichte.xbib.de and stores it in
@@ -29,6 +30,7 @@ function poem_fetchPoemOfTheDay() {
                 var doc = new DOMParser().parseFromString(req.responseText, 'text/html');
                 // the poem of the day is always stored in this paragraph
                 poem_potd = $('p.stext', doc).innerHTML;
+                poem_auth = $('p.s7 b', doc).innerHTML;
             } else {
                 console.error('Could not complete HTTP Request: ' + req.status);
             }

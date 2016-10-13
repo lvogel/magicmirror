@@ -17,7 +17,7 @@ function poem_updateDOM(node) {
     // by checking for window.poem_potd we can dodge nasty error messages in
     // the console
     if (window.poem_potd) {
-        node.innerHTML = poem_potd;
+        node.innerHTML = poem_potd + '<br><br>~&nbsp;' + poem_auth;
     }
 }
 
