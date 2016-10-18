@@ -30,7 +30,7 @@ function WidgetController() {
      * Stores the plugins that the controller manages.
      * @private
      */
-    var plugin_list = [];
+    var widget_list = [];
 
     /**
      * Stores the helpers that the controller manages.
@@ -43,9 +43,13 @@ function WidgetController() {
      * @param {Object[]} list - A list of plugins that should be included from the beginning.
      */
     this.init = function() {
+
+        // build the grid that will contain the widgets
         var docFrag = document.createDocumentFragment();
         var div_row;
         var div_cell;
+
+        // creates a 3x4 grid
         for (var i = 0; i < 4; i++) {
             div_row = document.createElement('div');
             div_row.classList.add('row');
@@ -59,7 +63,6 @@ function WidgetController() {
 
         $('body').appendChild(docFrag);
 
-        //TODO: Name verification
         var req = new XMLHttpRequest();
         req.onreadystatechange = function () {
             if (req.readyState == 4) {
@@ -97,8 +100,8 @@ function WidgetController() {
                 }
 
             // It doesn't matter whether the XMLRequest succeeded or not,
-            // since the Controller won't try again to load the data
-            // the initialization has finished.
+            // since the Controller won't try again to load the data.
+            // The initialization has finished.
             _initialized = true;
             }
         };
@@ -117,10 +120,14 @@ function WidgetController() {
      * chaining.
      */
     this.registerWidget = function (widget) {
+        // If the Controller has not been properly initialized, do nothing
+        if (!_initialized)
+            return false;
+
         var addedSuccessfully = false;
         var desPos = widget.desiredPositions;
 
-        if (!(desPos instanceof Array) || !plugin_list.every(function(el) {
+        if (!(desPos instanceof Array) || !widget_list.every(function(el) {
             return el.name != widget.name;
         }))
             return false;
@@ -130,8 +137,8 @@ function WidgetController() {
             return !isNaN(el);          // every element of desPos is a number
         })) {
             for (var i = 0; i < desPos.length; i++) {
-                if (!plugin_list[desPos[i]]) {
-                    plugin_list[desPos[i]] = widget;
+                if (!widget_list[desPos[i]]) {
+                    widget_list[desPos[i]] = widget;
                     widget.position = desPos[i];
                     addedSuccessfully = true;
     
@@ -145,14 +152,14 @@ function WidgetController() {
         })) {
             outer: for (var i = 0; i < desPos.length; i++) {
                 for (var j = 0; j < desPos[i].length; j++) {
-                    if (plugin_list[desPos[i][j]]) {
+                    if (widget_list[desPos[i][j]]) {
                         continue outer;
                     }
                 }
 
                 // We found a match!)
                 for (var k = 0; k < desPos[i].length; k++) {
-                    plugin_list[desPos[k]] = widget;
+                    widget_list[desPos[k]] = widget;
                 }
 
                 widget.position = desPos[i];
@@ -199,6 +206,10 @@ function WidgetController() {
      * @returns {Object} The Controller object to enable chaining.
      */
     this.registerHelper = function (helper) {
+        // If the Controller has not been properly initialized, do nothing
+        if (!_initialized)
+            return false;
+
         helper.id = window.setInterval(function() {
             helper.run();
         }, helper.refreshRate);
@@ -208,6 +219,10 @@ function WidgetController() {
     };
 
     this.loadDependencies = function (widgetId, dependencies) {
+        // If the Controller has not been properly initialized, do nothing
+        if (!_initialized)
+            return false;
+
         if (dependencies.helper && typeof dependencies.helper == "string" &&
             dependencies.helper.indexOf('../') == -1) {
             var script = document.createElement('script');
@@ -237,7 +252,7 @@ function WidgetController() {
         if (dependencies.css && typeof dependencies.css == "string" &&
             dependencies.css.indexOf('../') == -1) {
             var link = document.createElement('link');
-            link.href = './css/' + plugin_list[widgetId].name + '.css';
+            link.href = './css/' + widget_list[widgetId].name + '.css';
             link.rel = 'stylesheet';
             link.scoped = 'scoped'; // maybe this will get implemented sooner or later
 

@@ -9,7 +9,7 @@ var weather_lastFetchedData;
 
 function weather_fetchData() {
     var api_key = '424a922dab68fc46fbd86e31ae94846d'; // for easy future change
-    var city_id = '2657970'; // Winterthur. Change later, maybe?
+    var city_id = '2657970'; // Winterthur. Change to your city's code if you wish.
     var req = new XMLHttpRequest();
 
     req.onreadystatechange = function() {
