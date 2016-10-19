@@ -21,12 +21,6 @@
  */
 function WidgetController() {
     /**
-     * Indicates whether the controller has been initialized yet.
-     * @private
-     */
-    var _initialized = false;
-    
-    /**
      * Stores the plugins that the controller manages.
      * @private
      */
@@ -63,51 +57,36 @@ function WidgetController() {
 
         $('body').appendChild(docFrag);
 
-        var req = new XMLHttpRequest();
-        req.onreadystatechange = function () {
-            if (req.readyState == 4) {
-                if (req.status == 200) {
-                    // data fully and successfully loaded
-                    var data = req.responseText;
+        loadAsync('plugins.json', function (data) {
+            try {
+                data = JSON.parse(data);
+            }
+            catch(e) {
+                console.error(e);
+            }
+            
+            // If the JSON parsing failed it doesn't matter because the
+            // following steps will just be skipped.
+            if (data && data instanceof Array) {
+                // Usage of document fragments improves performance of the DOM
+                var frag = document.createDocumentFragment();
+                var node_js;
+                
+                for (var i = 0; i < data.length; i++) {
+                    if (typeof data[i] != "string")
+                        continue; // we can't read a file name from a number
 
-                    try {
-                        data = JSON.parse(data);
-                    }
-                    catch(e) {
-                        console.error(e);
-                    }
-                    
-                    // If the JSON parsing failed it doesn't matter because the
-                    // following steps will just be skipped.
-                    if (data && data instanceof Array) {
-                        // Usage of document fragments improves performance of the DOM
-                        var frag = document.createDocumentFragment();
-                        var node_js;
-                        
-                        for (var i = 0; i < data.length; i++) {
-                            if (typeof data[i] != "string")
-                                continue; // we can't read a file name from a number
-
-                            node_js = document.createElement('script');
-                            node_js.src = './js/' + data[i] + '.js';
-                    
-                            frag.appendChild(node_js);
-                        }
-                        $('head').appendChild(frag);
-                    }
-                } else {
-                    console.error('Could not complete HTTP Request: ' + req.status);
+                    node_js = document.createElement('script');
+                    node_js.src = './js/' + data[i] + '.js';
+            
+                    frag.appendChild(node_js);
                 }
 
-            // It doesn't matter whether the XMLRequest succeeded or not,
-            // since the Controller won't try again to load the data.
-            // The initialization has finished.
-            _initialized = true;
+                $('head').appendChild(frag);
             }
-        };
-        
-        req.open('GET', 'plugins.json', true);
-        req.send(); 
+        }, function (statusCode) {
+            console.error('Could not complete HTTP Request: ' + code);
+        });
     };
 
     /**
@@ -120,10 +99,6 @@ function WidgetController() {
      * chaining.
      */
     this.registerWidget = function (widget) {
-        // If the Controller has not been properly initialized, do nothing
-        if (!_initialized)
-            return false;
-
         var addedSuccessfully = false;
         var desPos = widget.desiredPositions;
 
@@ -206,10 +181,6 @@ function WidgetController() {
      * @returns {Object} The Controller object to enable chaining.
      */
     this.registerHelper = function (helper) {
-        // If the Controller has not been properly initialized, do nothing
-        if (!_initialized)
-            return false;
-
         helper.id = window.setInterval(function() {
             helper.run();
         }, helper.refreshRate);
@@ -219,10 +190,6 @@ function WidgetController() {
     };
 
     this.loadDependencies = function (widgetId, dependencies) {
-        // If the Controller has not been properly initialized, do nothing
-        if (!_initialized)
-            return false;
-
         if (dependencies.helper && typeof dependencies.helper == "string" &&
             dependencies.helper.indexOf('../') == -1) {
             var script = document.createElement('script');
@@ -235,6 +202,9 @@ function WidgetController() {
             dependencies.html.indexOf('../') == -1) {
             // dependencies.html is a valid string and does not access
             // a parent directory
+
+            // the following request can *not* be replaced by loadAsync() since
+            // it is *synchronous*
             var req = new XMLHttpRequest();
             req.onreadystatechange = function() {
                 if (req.readyState == 4) {

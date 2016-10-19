@@ -23,22 +23,15 @@ var poem_auth = '';
  * {@linkcode poem_potd}.
  */
 function poem_fetchPoemOfTheDay() {
-    var req = new XMLHttpRequest();
-    req.onreadystatechange = function() {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-                var doc = new DOMParser().parseFromString(req.responseText, 'text/html');
-                // the poem of the day is always stored in this paragraph
-                poem_potd = $('p.stext', doc).innerHTML;
-                poem_auth = $('p.s7 b', doc).innerHTML;
-            } else {
-                console.error('Could not complete HTTP Request: ' + req.status);
-            }
-        }
-    };
+    loadAsync('http://gedichte.xbib.de/gedicht_des_tages.html', function(data) {
+        var doc = new DOMParser().parseFromString(data, 'text/html');
 
-    req.open('GET', 'http://gedichte.xbib.de/gedicht_des_tages.html', true);
-    req.send();
+        // the poem of the day is always stored in this paragraph
+        poem_potd = $('p.stext', doc).innerHTML;
+        poem_auth = $('p.s7 b', doc).innerHTML;
+    }, function (code) {
+            console.error('Could not complete HTTP Request: ' + code);
+    });
 }
 
 new Helper('poem', poem_fetchPoemOfTheDay, 3600000).register();

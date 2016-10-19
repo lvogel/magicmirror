@@ -10,38 +10,6 @@ var weather_lastFetchedData;
 function weather_fetchData() {
     var api_key = '424a922dab68fc46fbd86e31ae94846d'; // for easy future change
     var city_id = '2657970'; // Winterthur. Change to your city's code if you wish.
-    var req = new XMLHttpRequest();
-
-    req.onreadystatechange = function() {
-        /*
-         * readyState == 4 -> data fully loaded
-         * status == 200 -> HTTP: 200 OK
-         */
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-                // data successfully loaded, now parse to an object
-                var data;
-                
-                try {
-                    // make sure the application will continue to run
-                    // even if the JSON file is corrupt
-                    data = JSON.parse(req.responseText);
-                }
-                catch(e) {
-                    console.error(e);
-                    return;
-                }
-
-                if (data == weather_lastFetchedData)
-                    return;
-                else weather_lastFetchedData = data;
-
-                weather_updateDOM();
-            } else {
-                console.error('Could not complete HTTP Request: ' + req.status);
-            }
-        }
-    };
 
     // If the helper supplied specific location data. Instead, fall back
     // to Winterthur (default)
@@ -56,8 +24,26 @@ function weather_fetchData() {
             city_id + '&appid=' + api_key + '&units=metric&lang=de';
     }
 
-    req.open('GET', url, true);
-    req.send();
+    loadAsync(url, function (data) {
+        // data successfully loaded, now parse to an object
+        try {
+            // make sure the application will continue to run
+            // even if the JSON file is corrupt
+            data = JSON.parse(data);
+        }
+        catch(e) {
+            console.error(e);
+            return;
+        }
+
+        if (data == weather_lastFetchedData)
+            return;
+        else weather_lastFetchedData = data;
+
+        weather_updateDOM();
+    }, function (code) {
+        console.error('Could not complete HTTP Request: ' + code);
+    });
 }
 
 function weather_updateDOM() {

@@ -25,42 +25,33 @@ var quote_lastFetchedData;
  * completed.
  */
 function quote_fetchData(nodes) {
-    var req = new XMLHttpRequest();
+    loadAsync('http://quotes.rest/qod.json', function(data) {
+        try {
+            data = JSON.parse(data);
+        }
+        catch(e) {
+            console.error(e);
+            return;
+        }
 
-    req.onreadystatechange = function() {
-        if (req.readyState == 4) {
-            if (req.status  == 200) {
-                var data;
+        if (data == quote_lastFetchedData)
+            return;
 
-                try {
-                    data = JSON.parse(req.responseText);
-                }
-                catch(e) {
-                    console.error(e);
-                    return;
-                }
+        // TODO: sanity check JSON data
+        quote_lastFetchedData = data;
+        quote_updateDOM(nodes[0]);
 
-                if (data == quote_lastFetchedData)
-                    return;
-
-                // TODO: sanity check JSON data
-
-                quote_lastFetchedData = data;
-                quote_updateDOM(nodes[0]);
-
-            } else if (req.status == 429) {
+        }, function (code) {
+             if (code == 429) {
                 // API quota exceeded. No more requests possible.
                 // happens if browser refreshes >10x/hour
                 console.warn('Could not load quote of the day: API limit exceeded');
                 return false;
             } else {
-                console.error('Could not complete HTTP Request: ', req.status);
+                console.error('Could not complete HTTP Request: ', code);
             }
         }
-    };
-
-    req.open('GET', 'http://quotes.rest/qod.json', true);
-    req.send();
+    );
 }
 
 function quote_updateDOM(node) {
