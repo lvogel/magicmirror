@@ -1,0 +1,13 @@
+/*
+ * quote.css
+ * Magic Mirror
+ * (c) 2016 by Lukas Vogel
+ */
+
+div.quote {
+    font-family: Open Sans, Arial, sans-serif;
+    font-size: 25px;
+
+    vertical-align: middle;
+    padding: 10px;
+}

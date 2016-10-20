@@ -24,7 +24,7 @@ var quote_lastFetchedData;
  * @throws Will log an error to the console if the HTTP request could not be
  * completed.
  */
-function quote_fetchData(nodes) {
+function quote_fetchData(node) {
     loadAsync('http://quotes.rest/qod.json', function(data) {
         try {
             data = JSON.parse(data);
@@ -39,7 +39,7 @@ function quote_fetchData(nodes) {
 
         // TODO: sanity check JSON data
         quote_lastFetchedData = data;
-        quote_updateDOM(nodes[0]);
+        quote_updateDOM(node);
 
         }, function (code) {
              if (code == 429) {
@@ -55,7 +55,9 @@ function quote_fetchData(nodes) {
 }
 
 function quote_updateDOM(node) {
-    node.innerHTML = quote_lastFetchedData.contents.quotes[0].quote; 
+    node.innerHTML = '&ldquo;' + quote_lastFetchedData.contents.quotes[0].quote + '&rdquo;'; 
 }
 
-new Widget('quote', quote_fetchData, [[0,3]], 3600000).register();
+new Widget('quote', quote_fetchData, [11, 8], 3600000).register().loadDependencies({
+    css: 'quote.css'
+});
