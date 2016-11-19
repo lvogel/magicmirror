@@ -24,10 +24,12 @@ var poem_auth = '';
  */
 function poem_fetchPoemOfTheDay() {
     loadAsync('http://gedichte.xbib.de/gedicht_des_tages.html', function(data) {
+        // parse raw HTML to a document object model representation
         var doc = new DOMParser().parseFromString(data, 'text/html');
 
-        // the poem of the day is always stored in this paragraph
+        // the poem of the day is always stored in '<p class=stext>'
         poem_potd = $('p.stext', doc).innerHTML;
+        // the author is always stored in '<p class=s7>'
         poem_auth = $('p.s7 b', doc).innerHTML;
     }, function (code) {
             console.error('Could not complete HTTP Request: ' + code);

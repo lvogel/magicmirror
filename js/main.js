@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         Controller.init();
     };
     
+    // add the script to the DOM to load it
     $('head').appendChild(script);
 });
 

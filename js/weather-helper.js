@@ -11,6 +11,7 @@ function weather_getLocation() {
         navigator.geolocation.getCurrentPosition(function (position) {
             // location successfully fetched
             weather_location = position.coords;
+            // override the Controller and manually refresh
             weather_fetchData($('.weather'));
         }, function (error) {
             // error handling

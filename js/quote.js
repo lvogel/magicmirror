@@ -26,6 +26,7 @@ var quote_lastFetchedData;
  */
 function quote_fetchData(node) {
     loadAsync('http://quotes.rest/qod.json', function(data) {
+        // parse response text to JSON, which is more useful
         try {
             data = JSON.parse(data);
         }
@@ -37,7 +38,10 @@ function quote_fetchData(node) {
         if (data == quote_lastFetchedData)
             return;
 
-        // TODO: sanity check JSON data
+        if (!data.contents.quotes[0].quote)
+            // useless or invalid data
+            return false;
+
         quote_lastFetchedData = data;
         quote_updateDOM(node);
 
