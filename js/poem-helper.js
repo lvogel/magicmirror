@@ -16,6 +16,12 @@
  * @type {String}
  */
 var poem_potd = '';
+/**
+ * Contains the name of the author of today's poem. Should only be set by
+ * {@linkcode poem_fetchPoemOfTheDay}
+ * @type {String}
+ *
+ */
 var poem_auth = '';
 
 /**

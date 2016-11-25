@@ -6,6 +6,11 @@
 
 var weather_location;
 
+/**
+ * Tries to use the HTML5 GeoLocation API to locate the user. The weather
+ * widget then tries to load the weather according to the user's position.
+ * Will set the {@linkcode weather_location} global variable.
+ */
 function weather_getLocation() {
     if (navigator && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {

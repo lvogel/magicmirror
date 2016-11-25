@@ -189,6 +189,14 @@ function WidgetController() {
         return this;
     };
 
+    /**
+     * Load data that is strictly needed for the widget's code execution. By
+     * passing HTML, CSS or JavaScript file names as parameters
+     * you can make the Controller do the work for you.
+     * @param {Number} widgetId - The assigned position of the widget on screen.
+     * @param {Object.<string,string>} dependencies - An object with properties 
+     * "html", "css" or "helper" that refer to filenames in the specific folders.
+     */
     this.loadDependencies = function (widgetId, dependencies) {
         if (dependencies.helper && typeof dependencies.helper == "string" &&
             dependencies.helper.indexOf('../') == -1) {

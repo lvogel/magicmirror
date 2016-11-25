@@ -4,9 +4,13 @@
 // (c) 2016 by Lukas Vogel
 //
 
-// Bad practise ahead
 var weather_lastFetchedData;
 
+/*
+ * Fetches the weather from openweathermap.org and then sets the variable
+ * {@linkcode weather_lastFetchedData}. If no other location is specified,
+ * it will default to Winterthur.
+ */
 function weather_fetchData() {
     var api_key = '424a922dab68fc46fbd86e31ae94846d'; // for easy future change
     var city_id = '2657970'; // Winterthur. Change to your city's code if you wish.
