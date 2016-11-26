@@ -11,10 +11,10 @@ div.time {
 
 div.time .time-clock {
     font-weight: 200;
-    font-size: 200px;
+    font-size: 12.5vw;
 }
 
 div.time .time-date {
     font-weight: 300;
-    font-size: 30px;
+    font-size: 3vw;
 }

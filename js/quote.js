@@ -59,7 +59,7 @@ function quote_fetchData(node) {
 }
 
 function quote_updateDOM(node) {
-    node.innerHTML = '&ldquo;' + quote_lastFetchedData.contents.quotes[0].quote + '&rdquo;'; 
+    node.innerHTML = quote_lastFetchedData.contents.quotes[0].quote;
 }
 
 new Widget('quote', quote_fetchData, [11, 8], 3600000).register().loadDependencies({

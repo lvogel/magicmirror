@@ -6,8 +6,20 @@
 
 div.quote {
     font-family: Open Sans, Arial, sans-serif;
-    font-size: 25px;
+    font-size: 1.5vw;
+    line-height: 2vw;
 
     vertical-align: middle;
     padding: 10px;
+    text-indent: 1em;
+}
+
+div.quote::before {
+    content: '“';
+    font-size: 2vw;
+}
+
+div.quote::after {
+    content: '”';
+    font-size: 2vw;
 }
