@@ -6,8 +6,9 @@
 
 div.quote {
     font-family: Open Sans, Arial, sans-serif;
-    font-size: 1.5vw;
-    line-height: 2vw;
+    font-size: 3.5vh;
+    font-weight: 400;
+    line-height: 4vh;
 
     vertical-align: middle;
     padding: 10px;
@@ -16,10 +17,10 @@ div.quote {
 
 div.quote::before {
     content: '“';
-    font-size: 2vw;
+    font-size: 4vh;
 }
 
 div.quote::after {
     content: '”';
-    font-size: 2vw;
+    font-size: 4vh;
 }

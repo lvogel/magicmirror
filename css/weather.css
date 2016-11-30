@@ -11,42 +11,43 @@
 
 .weather .temp {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
+    bottom: 4vh;
+    left: 4vw;
 
     text-align: right;
     width: 200px;
 }
 
 .weather .number {
-    font-size: 100px;
-    line-height: 100px;
+    font-size: 15vh;
+    line-height: 15vh;
     font-family: 'Open Sans';
 }
 
 .weather .unit {
     position: relative;
-    top: -40px;
-    font-size: 40px;
+    top: -8vh;
+    left: -1vh;
+    font-size: 4vh;
 }
 
 .weather .location {
-    font-size: 25px;
+    font-size: 3vh;
     text-align: right;
     text-overflow: ellipsis;
 
     position: absolute;
-    bottom: 120px;
-    left: 20px;
+    bottom: 18vh;
+    left: 3vh;
     width: 200px;
 }
 
 .weather .cond {
     position: absolute;
-    left: 250px;
-    bottom: 20px;
+    left: 20vw;
+    bottom: 5vh;
     width: 200px;
 
-    font-size: 35px;
+    font-size: 3vh;
     font-style: italic;
 }
