@@ -5,16 +5,16 @@
  */
 
 div.time {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     text-align: center;
 }
 
 div.time .time-clock {
     font-weight: 200;
-    font-size: 30vw;
+    font-size: 39vw;
 }
 
 div.time .time-date {
     font-weight: 300;
-    font-size: 3vw;
+    font-size: 10vw;
 }

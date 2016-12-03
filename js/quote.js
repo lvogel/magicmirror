@@ -62,6 +62,6 @@ function quote_updateDOM(node) {
     node.innerHTML = quote_lastFetchedData.contents.quotes[0].quote;
 }
 
-new Widget('quote', quote_fetchData, [11, 8], 3600000).register().loadDependencies({
+new Widget('quote', quote_fetchData, [8, 5], 3600000).register().loadDependencies({
     css: 'quote.css'
 });

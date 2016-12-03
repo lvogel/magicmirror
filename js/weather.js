@@ -56,7 +56,7 @@ function weather_updateDOM() {
     $('.weather .location').innerHTML = weather_lastFetchedData.name || "";
 }
 
-new Widget('weather', weather_fetchData, [9, 10, 11], 60000).register().loadDependencies({
+new Widget('weather', weather_fetchData, [6, 7, 8], 60000).register().loadDependencies({
     helper: 'weather-helper.js',
     html: 'weather.shtml',
     css: 'weather.css'

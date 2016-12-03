@@ -25,7 +25,7 @@ function time_update(node) {
     $('.time-date').innerHTML = date.toLocaleDateString();
 }
 
-new Widget('time', time_update, [1,0,2], 10000).register().loadDependencies({
+new Widget('time', time_update, [[0, 1, 2]], 10000).register().loadDependencies({
     html: 'time.shtml',
     css: 'time.css'
 });
