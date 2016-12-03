@@ -44,7 +44,7 @@ function WidgetController() {
         var div_cell;
 
         // creates a 3x4 grid
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < 3; i++) {
             div_row = document.createElement('div');
             div_row.classList.add('row');
             for (var j = 0; j < 3; j++) {
@@ -134,7 +134,7 @@ function WidgetController() {
 
                 // We found a match!)
                 for (var k = 0; k < desPos[i].length; k++) {
-                    widget_list[desPos[k]] = widget;
+                    widget_list[desPos[i][k]] = widget;
                 }
 
                 widget.position = desPos[i];
@@ -336,7 +336,10 @@ function Widget(name, callBack, desiredPositions, refreshRate) {
             return false;
         }
 
-        window.Controller.loadDependencies(this.position, dependencies);
+        if (!(this.position instanceof Array))
+            window.Controller.loadDependencies(this.position, dependencies);
+        else
+            window.Controller.loadDependencies(this.position[0], dependencies);
         this.draw();
     };
 }
