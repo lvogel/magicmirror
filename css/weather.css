@@ -12,7 +12,7 @@
 .weather .temp {
     position: absolute;
     bottom: 100px;
-    left: 20px;
+    left: 0;
 
     text-align: right;
     width: 350px;
@@ -43,7 +43,7 @@
 
 .weather .cond {
     position: absolute;
-    left: 350px;
+    left: 300px;
     bottom: 110px;
     width: 300px;
 
